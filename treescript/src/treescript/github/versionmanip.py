@@ -125,7 +125,8 @@ async def do_bump_version(client: GithubClient, files: List[str], next_version: 
     """
     changes = {}
     diff = []
-    file_contents = await client.get_files(files, branch=branch, mode=None)
+    file_contents = await client.get_files(files, branch=branch)
+    file_contents = {f: contents["text"] for f, contents in file_contents.items()}
     for file_ in files:
         if file_ not in ALLOWED_BUMP_FILES:
             raise TaskVerificationError("{} is not in version bump whitelist".format(file_))

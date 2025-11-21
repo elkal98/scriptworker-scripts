@@ -155,9 +155,9 @@ def assert_success(req, initial_values, expected_bumps):
                 ],
             },
             {
-                "mobile/android/fenix/app/src/main/res/values-my/strings.xml": "my expected contents",
-                "mobile/android/focus-android/app/src/main/res/values-zam/strings.xml": "zam expected contents",
-                "mobile/android/android-components/components/browser/toolbar/src/main/res/values-ab/strings.xml": "ab expected contents",
+                "mobile/android/fenix/app/src/main/res/values-my/strings.xml": {"mode": 100400, "text": "my expected contents"},
+                "mobile/android/focus-android/app/src/main/res/values-zam/strings.xml": {"mode": 100400, "text": "zam expected contents"},
+                "mobile/android/android-components/components/browser/toolbar/src/main/res/values-ab/strings.xml": {"mode": 100400, "text": "ab expected contents"},
             },
             {
                 "mobile/android/fenix/l10n.toml": fenix_l10n_toml,
@@ -196,9 +196,9 @@ def assert_success(req, initial_values, expected_bumps):
                 ],
             },
             {
-                "mobile/android/fenix/app/src/main/res/values-my/strings.xml": None,
-                "mobile/android/focus-android/app/src/main/res/values-zam/strings.xml": None,
-                "mobile/android/android-components/components/browser/toolbar/src/main/res/values-ab/strings.xml": None,
+                "mobile/android/fenix/app/src/main/res/values-my/strings.xml": {"mode": 100400, "text": None},
+                "mobile/android/focus-android/app/src/main/res/values-zam/strings.xml": {"mode": 100400, "text": None},
+                "mobile/android/android-components/components/browser/toolbar/src/main/res/values-ab/strings.xml": {"mode": 100400, "text": None},
             },
             {
                 "mobile/android/fenix/l10n.toml": fenix_l10n_toml,

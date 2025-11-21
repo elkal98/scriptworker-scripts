@@ -14,7 +14,9 @@ def diff_contents(orig, modified, file, mode=None):
         # orig does not exist yet; ie: it will be added
         orig_contents = ""
         fromfile = "/dev/null"
-        add_remove_metadata = f"new file mode {mode or 100644}\n"
+        if mode is None:
+            raise ValueError("Mode must be passed")
+        add_remove_metadata = f"new file mode {mode}\n"
     if modified:
         # modified exists already
         modified_contents = modified.splitlines()
@@ -23,7 +25,9 @@ def diff_contents(orig, modified, file, mode=None):
         # modified does not exist yet; ie: it will be added
         modified_contents = ""
         tofile = "/dev/null"
-        add_remove_metadata = f"deleted file mode {mode or 100644}\n"
+        if mode is None:
+            raise ValueError("Mode must be passed")
+        add_remove_metadata = f"deleted file mode {mode}\n"
 
     diff_lines = [line for line in unified_diff(orig_contents, modified_contents, fromfile=fromfile, tofile=tofile, lineterm="")]
     if not diff_lines:

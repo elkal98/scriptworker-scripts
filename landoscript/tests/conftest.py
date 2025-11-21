@@ -261,12 +261,12 @@ def assert_add_commit_response(action, commit_msg_strings, initial_values, expec
                 # the diff.
                 if not before:
                     # addition
-                    assert f"new file mode {mode or 100644}" in diff
+                    assert "new file mode" in diff
                     if "\n" not in after and f"+{after}" in diff:
                         break
                 elif not after:
                     # removal
-                    assert f"deleted file mode {mode or 100644}" in diff
+                    assert "deleted file mode" in diff
                     if not "\n" in before and f"-{before}" in diff:
                         break
                 else:

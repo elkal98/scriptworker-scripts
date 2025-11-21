@@ -164,9 +164,9 @@ def assert_success(req, initial_values, expected_bumps):
             },
             {
                 # paths in android-l10n
-                "mozilla-mobile/fenix/app/src/main/res/values-my/strings.xml": "my expected contents",
-                "mozilla-mobile/focus-android/app/src/main/res/values-zam/strings.xml": "zam expected contents",
-                "mozilla-mobile/android-components/components/browser/toolbar/src/main/res/values-ab/strings.xml": "ab expected contents",
+                "mozilla-mobile/fenix/app/src/main/res/values-my/strings.xml": {"mode": 100400, "text": "my expected contents"},
+                "mozilla-mobile/focus-android/app/src/main/res/values-zam/strings.xml": {"mode": 100400, "text": "zam expected contents"},
+                "mozilla-mobile/android-components/components/browser/toolbar/src/main/res/values-ab/strings.xml": {"mode": 100400, "text": "ab expected contents"},
             },
             {
                 # paths in gecko
@@ -211,9 +211,9 @@ def assert_success(req, initial_values, expected_bumps):
             },
             {
                 # paths in android-l10n
-                "mozilla-mobile/fenix/app/src/main/res/values-my/strings.xml": None,
-                "mozilla-mobile/focus-android/app/src/main/res/values-zam/strings.xml": None,
-                "mozilla-mobile/android-components/components/browser/toolbar/src/main/res/values-ab/strings.xml": None,
+                "mozilla-mobile/fenix/app/src/main/res/values-my/strings.xml": {"mode": 100400, "text": None},
+                "mozilla-mobile/focus-android/app/src/main/res/values-zam/strings.xml": {"mode": 100400, "text": None},
+                "mozilla-mobile/android-components/components/browser/toolbar/src/main/res/values-ab/strings.xml": {"mode": 100400, "text": None},
             },
             {
                 # paths in gecko
@@ -305,10 +305,10 @@ def assert_success(req, initial_values, expected_bumps):
             },
             {
                 # paths in android-l10n
-                "mozilla-mobile/fenix/app/src/main/res/values-my/strings.xml": "my initial contents",
-                "mozilla-mobile/focus-android/app/src/main/res/values-zam/strings.xml": "zam initial contents",
-                "mozilla-mobile/android-components/components/browser/toolbar/src/main/res/values-ab/strings.xml": "ab initial contents",
-                "mozilla-mobile/android-components/components/browser/toolbar/src/main/res/values-de/strings.xml": "de initial contents",
+                "mozilla-mobile/fenix/app/src/main/res/values-my/strings.xml": {"mode": 100400, "text": "my initial contents"},
+                "mozilla-mobile/focus-android/app/src/main/res/values-zam/strings.xml": {"mode": 100400, "text": "zam initial contents"},
+                "mozilla-mobile/android-components/components/browser/toolbar/src/main/res/values-ab/strings.xml": {"mode": 100400, "text": "ab initial contents"},
+                "mozilla-mobile/android-components/components/browser/toolbar/src/main/res/values-de/strings.xml": {"mode": 100400, "text": "de initial contents"},
             },
             {
                 # paths in gecko
@@ -355,9 +355,9 @@ def assert_success(req, initial_values, expected_bumps):
             },
             {
                 # paths in android-l10n
-                "mozilla-mobile/fenix/app/src/main/res/values-zh/strings.xml": "zh initial contents",
-                "mozilla-mobile/focus-android/app/src/main/res/values-zam/strings.xml": "zam initial contents",
-                "mozilla-mobile/android-components/components/browser/toolbar/src/main/res/values-ab/strings.xml": "ab initial contents",
+                "mozilla-mobile/fenix/app/src/main/res/values-zh/strings.xml": {"mode": 100400, "text": "zh initial contents"},
+                "mozilla-mobile/focus-android/app/src/main/res/values-zam/strings.xml": {"mode": 100400, "text": "zam initial contents"},
+                "mozilla-mobile/android-components/components/browser/toolbar/src/main/res/values-ab/strings.xml": {"mode": 100400, "text": "ab initial contents"},
             },
             {
                 # paths in gecko

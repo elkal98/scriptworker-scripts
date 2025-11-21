@@ -47,10 +47,11 @@ async def run(
     async with GithubClient(github_config, l10n_owner, l10n_repo) as l10n_github_client:
         toml_files = [info.toml_path for info in android_l10n_import_info.toml_info]
         # we always take the tip of the default branch when importing new strings
-        toml_contents = await l10n_github_client.get_files(toml_files, mode=None)
+        toml_contents = await l10n_github_client.get_files(toml_files, fetch_mode=True)
+        toml_contents = {f: {"text": contents["text"], "mode": contents["mode"]} for f, contents in toml_contents.items()}
         l10n_files: list[L10nFile] = []
 
-        missing = [fn for fn, contents in toml_contents.items() if contents is None]
+        missing = [fn for fn, contents in toml_contents.items() if contents["text"] is None]
         if missing:
             raise LandoscriptError(f"toml_file(s) {' '.join(missing)} are not present in repository")
 
@@ -58,7 +59,7 @@ async def run(
             toml_file = info.toml_path
             log.info(f"processing toml file: {toml_file}")
 
-            contents = tomllib.loads(str(toml_contents[toml_file]))
+            contents = tomllib.loads(toml_contents[toml_file]["text"])
             src_file_prefix = Path(toml_file).parent
             dst_file_prefix = Path(info.dest_path)
             if "**" in contents["paths"][0]["reference"]:
@@ -75,7 +76,8 @@ async def run(
         # fetch l10n_files from android-l10n
         src_files = [f.src_name for f in l10n_files]
         log.info(f"fetching updated files from l10n repository: {src_files}")
-        new_files = await l10n_github_client.get_files(src_files, mode=None)
+        new_files = await l10n_github_client.get_files(src_files, fetch_mode=True)
+        new_files = {f: {"text": file["text"], "mode": file["mode"]} for f, file in new_files.items()}
         # we also need to update the toml files with locale metadata. we've
         # already fetched them above; so just add their contents by hand
         new_files.update(toml_contents)
@@ -88,7 +90,8 @@ async def run(
             dst_files.append(f"{toml_info.dest_path}/l10n.toml")
 
         log.info(f"fetching original files from l10n repository: {dst_files}")
-        orig_files = await github_client.get_files(dst_files, branch=to_branch, mode=None)
+        orig_files = await github_client.get_files(dst_files, branch=to_branch, fetch_mode=True)
+        orig_files = {f: {"text": file["text"], "mode": file["mode"]} for f, file in orig_files.items()}
 
         files_to_diff = []
         for l10n_file in l10n_files:
@@ -132,7 +135,10 @@ async def run(
 
         diffs = []
         for file_path, orig_file, new_file in files_to_diff:
-            diffs.append(diff_contents(orig_file, new_file, file_path))
+            orig_file_text = orig_file["text"]
+            new_file_text = new_file["text"]
+            mode = new_file["mode"]
+            diffs.append(diff_contents(orig_file_text, new_file_text, file_path, mode=mode))
 
         diff = "\n".join(diffs)
 

@@ -100,14 +100,14 @@ async def test_commit_retry(aioresponses, github_client):
 @pytest.mark.asyncio
 async def test_get_files(aioresponses, github_client):
     branch = "main"
-    expected = {"README.md": "Hello!", "version.txt": "109.1.0"}
+    expected = {'README.md': {'mode': None, 'text': 'Hello!'}, 'version.txt': {'mode': None, 'text': '109.1.0'}}
     aliases = {
         "README.md": "a" + hashlib.md5("README.md".encode()).hexdigest(),
         "version.txt": "a" + hashlib.md5("version.txt".encode()).hexdigest(),
     }
     files = list(expected)
 
-    aioresponses.post(GITHUB_GRAPHQL_ENDPOINT, status=200, payload={"data": {"repository": {aliases[k]: {"text": v} for k, v in expected.items()}}})
+    aioresponses.post(GITHUB_GRAPHQL_ENDPOINT, status=200, payload={"data": {"repository": {aliases[k]: {"text": v["text"]} for k, v in expected.items()}}})
 
     result = await github_client.get_files(files, branch, mode=None)
     assert result == expected
@@ -158,15 +158,15 @@ async def test_get_files(aioresponses, github_client):
 @pytest.mark.asyncio
 async def test_get_files_multiple_requests(aioresponses, github_client):
     branch = "main"
-    expected = {"README.md": "Hello!", "version.txt": "109.1.0"}
+    expected = {'README.md': {'mode': None, 'text': 'Hello!'}, 'version.txt': {'mode': None, 'text': '109.1.0'}}
     aliases = {
         "README.md": "a" + hashlib.md5("README.md".encode()).hexdigest(),
         "version.txt": "a" + hashlib.md5("version.txt".encode()).hexdigest(),
     }
     files = list(expected)
 
-    aioresponses.post(GITHUB_GRAPHQL_ENDPOINT, status=200, payload={"data": {"repository": {aliases["README.md"]: {"text": expected["README.md"]}}}})
-    aioresponses.post(GITHUB_GRAPHQL_ENDPOINT, status=200, payload={"data": {"repository": {aliases["version.txt"]: {"text": expected["version.txt"]}}}})
+    aioresponses.post(GITHUB_GRAPHQL_ENDPOINT, status=200, payload={"data": {"repository": {aliases["README.md"]: {"text": expected["README.md"]["text"]}}}})
+    aioresponses.post(GITHUB_GRAPHQL_ENDPOINT, status=200, payload={"data": {"repository": {aliases["version.txt"]: {"text": expected["version.txt"]["text"]}}}})
 
     result = await github_client.get_files(files, branch, files_per_request=1, mode=None)
     assert result == expected
@@ -229,7 +229,7 @@ async def test_get_files_multiple_requests(aioresponses, github_client):
 async def test_get_files_with_missing(aioresponses, github_client):
     branch = "main"
     files = ["README.md", "version.txt", "missing.txt"]
-    expected = {"README.md": "Hello!", "version.txt": "109.1.0", "missing.txt": None}
+    expected = {'README.md': {'mode': None, 'text': 'Hello!'}, 'version.txt': {'mode': None, 'text': '109.1.0'}, 'missing.txt': {'mode': None, 'text': None}}
     aliases = {
         "README.md": "a" + hashlib.md5("README.md".encode()).hexdigest(),
         "version.txt": "a" + hashlib.md5("version.txt".encode()).hexdigest(),

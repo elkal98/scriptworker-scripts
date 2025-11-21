@@ -161,7 +161,8 @@ async def run(
         for r in regex_replacements:
             needed_files.append(r[0])
 
-        orig_contents = await github_client.get_files(needed_files, bump_branch, mode=None)
+        orig_contents = await github_client.get_files(needed_files, bump_branch)
+        orig_contents = {f: contents["text"] for f, contents in orig_contents.items()}
         # At the moment, there are no known cases of needing to replace with
         # a suffix...so we simply don't handle that here!
         new_contents = process_replacements(bump_version, replacements, regex_replacements, orig_contents)
@@ -171,7 +172,9 @@ async def run(
             files_to_diff.append((fn, str(orig_contents[fn]), new_contents[fn]))
 
     log.info("Touching clobber file")
-    orig_clobber_file = (await github_client.get_files("CLOBBER", bump_branch, mode=None))["CLOBBER"]
+    orig_clobber_file = (await github_client.get_files("CLOBBER", bump_branch))["CLOBBER"]
+    orig_clobber_file = {f: contents for f, contents in orig_clobber_file.items()}
+    orig_clobber_file = orig_clobber_file["text"]
     if orig_clobber_file is None:
         raise LandoscriptError("Couldn't find CLOBBER file in repository!")
 
@@ -211,6 +214,7 @@ async def get_version(github_client: GithubClient, version_file: str, branch: st
     if contents is None:
         raise LandoscriptError(f"Couldn't find {version_file} in repository!")
 
+    contents = contents["text"]
     VersionClass = find_what_version_parser_to_use(version_file)
     lines = [line for line in contents.splitlines() if line and not line.startswith("#")]
     return VersionClass.parse(lines[-1])

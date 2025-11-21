@@ -93,9 +93,7 @@ class GithubClient:
 
         await retry_async(_execute, attempts=3, retry_exceptions=(TransportQueryError,), sleeptime_kwargs={"delay_factor": 0})
 
-    async def get_files(
-        self, files: Union[str, List[str]], branch: Optional[str] = None, files_per_request: int = 200, mode: Optional[str] = None
-    ) -> Dict[str, Union[str, Dict[str, Optional[str]]]]:
+    async def get_files(self, files: Union[str, List[str]], branch: Optional[str] = None, files_per_request: int = 200, fetch_mode: bool = False) -> Dict[str, Dict[str, Union[str, None]]]:
         """Get the contents of the specified files.
 
         Args:
@@ -125,22 +123,33 @@ class GithubClient:
             """
             )
         )
-        field = Template(
+        field_without_mode = Template(
+            dedent(
+                """
+            $name: object(expression: "$branch:$file") {
+              ... on Blob {
+                text
+              }
+            }
+            """
+            )
+        )
+        field_with_mode = Template(
             dedent(
                 """
             $name: object(expression: "$branch:$file") {
               ... on Tree {
-              entries {
+                entries {
                     name
                     mode
                     object {
-                        ... on Blob {
-                            text
-                        }
+                    ... on Blob {
+                      text
                     }
+                  }
                 }
-            }
-        }
+              }
+            }  
             """
             )
         )
@@ -150,7 +159,7 @@ class GithubClient:
         # file paths to their hashes, and use the hashes as the key names
         # in the query.
         aliases = {}
-        ret: Dict[str, Union[str, Dict[str, Optional[str]]]] = {}
+        ret: Dict[str, Dict[str, Union[str, None]]] = {}
 
         # yields the starting index for each batch
         for i in range(0, len(files), files_per_request):
@@ -163,6 +172,10 @@ class GithubClient:
                 # this.
                 hash_ = "a" + hashlib.md5(f.encode()).hexdigest()
                 aliases[hash_] = f
+                if fetch_mode:
+                    field = field_with_mode
+                else:
+                    field = field_without_mode
                 fields.append(field.substitute(branch=branch, file=f, name=hash_))
 
             str_query = query.substitute(owner=self.owner, repo=self.repo, fields=",".join(fields))
@@ -173,12 +186,12 @@ class GithubClient:
                 # to their actual file paths.
                 name = aliases[k]
                 if v is None:
-                    ret[name] = None
+                    ret[name] = {"mode": None, "text": None}
                 else:
-                    if mode:
+                    if fetch_mode:
                         ret[name] = {"mode": v.get("mode"), "text": v.get("text")}
                     else:
-                        ret[name] = v.get("text")
+                        ret[name] = {"mode": None, "text": v.get("text")}
 
         return ret
 
