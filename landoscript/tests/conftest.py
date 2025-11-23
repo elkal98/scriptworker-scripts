@@ -219,7 +219,7 @@ def assert_tag_response(req, tag_info, target_revision):
     assert revisions.pop() == target_revision
 
 
-def assert_add_commit_response(action, commit_msg_strings, initial_values, expected_bumps, mode=None):
+def assert_add_commit_response(action, commit_msg_strings, initial_values, expected_bumps):
     # ensure metadata is correct
     assert action["author"] == "Release Engineering Landoscript <release+landoscript@mozilla.com>"
     # we don't actually verify the value here; it's not worth the trouble of mocking

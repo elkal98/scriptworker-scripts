@@ -51,7 +51,7 @@ async def run(github_client: GithubClient, public_artifact_dir: str, android_l10
         toml_file = info.toml_path
         log.info(f"processing toml file: {toml_file}")
 
-        contents = tomllib.loads(toml_contents[toml_file]["text"])
+        contents = tomllib.loads(str(toml_contents[toml_file]["text"]))
         src_file_prefix = Path(toml_file).parent
         dst_file_prefix = src_file_prefix
         if "**" in contents["paths"][0]["reference"]:

@@ -209,12 +209,11 @@ async def run(
 
 
 async def get_version(github_client: GithubClient, version_file: str, branch: str):
-    resp = await github_client.get_files(version_file, branch, mode=None)
-    contents = resp[version_file]
+    resp = await github_client.get_files(version_file, branch)
+    contents = resp[version_file]["text"]
     if contents is None:
         raise LandoscriptError(f"Couldn't find {version_file} in repository!")
 
-    contents = contents["text"]
     VersionClass = find_what_version_parser_to_use(version_file)
     lines = [line for line in contents.splitlines() if line and not line.startswith("#")]
     return VersionClass.parse(lines[-1])

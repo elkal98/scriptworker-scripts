@@ -74,7 +74,7 @@ diff --git a/file.txt b/file.txt
 def test_no_newline_removal():
     before = "abcdef"
     after = ""
-    mode = 100644
+    mode = "100644"
     assert (
         diff_contents(before, after, "file.txt", mode)
         == """\
@@ -91,7 +91,7 @@ deleted file mode 100644
 def test_no_newline_addition():
     before = ""
     after = "ghijkl"
-    mode = 100644
+    mode = "100644"
     assert (
         diff_contents(before, after, "file.txt", mode)
         == """\
@@ -108,7 +108,7 @@ new file mode 100644
 def test_newline_removal():
     before = "abcdef\n"
     after = ""
-    mode = 100644
+    mode = "100644"
     assert (
         diff_contents(before, after, "file.txt", mode)
         == """\
@@ -125,7 +125,7 @@ deleted file mode 100644
 def test_newline_addition():
     before = ""
     after = "ghijkl\n"
-    mode = 100644
+    mode = "100644"
     assert (
         diff_contents(before, after, "file.txt", mode)
         == """\
